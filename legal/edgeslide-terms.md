@@ -38,7 +38,7 @@ The app is free. Full stop. If you want to support development, there's an optio
 - It's voluntary. Paying nothing gets you exactly the same software as paying something.
 - It grants no extra features, priority support, or entitlements of any kind.
 - Payments are non-refundable. They're a thank-you, not a purchase. There's nothing to return.
-- Donations are processed by **[FILL IN payment provider — e.g. Stripe / Ko-fi]**, whose own terms and privacy policy govern the transaction. We don't handle payment details directly.
+- Donations are processed by **Ko-fi** (ko-fi.com/puttingpixelstogether/tip), whose own terms and privacy policy govern the transaction. We don't handle payment details directly.
 
 ---
 

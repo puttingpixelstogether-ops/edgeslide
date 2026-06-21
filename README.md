@@ -16,6 +16,25 @@ appears when you open it.
 
 ---
 
+## Download
+
+Grab the latest **`EdgeSlide.exe`** from the
+[**Releases page**](https://github.com/puttingpixelstogether-ops/edgeslide/releases/latest).
+
+It's a single portable file — no installer, nothing else to download. Just run it and
+it appears in your system tray. To remove it later, exit it from the tray and delete
+the file.
+
+> **First launch:** because the app isn't code-signed yet, Windows SmartScreen may show
+> *"Windows protected your PC."* Click **More info → Run anyway**. This is expected for
+> small independent apps; the warning fades as more people run the same file.
+
+Requires a **Windows Precision Touchpad** (Windows 10/11). If you enable *Launch at
+startup*, keep the `.exe` somewhere permanent first — startup remembers wherever the
+file currently lives.
+
+---
+
 ## What it does
 
 - Reserves the outer left/right strips (default 5 mm, configurable 3–15 mm) of any

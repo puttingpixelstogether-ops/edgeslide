@@ -124,4 +124,4 @@ If something material changes — for example, if a future version adds any netw
 ## Contact
 
 Questions about this policy: hello@edgeslide.app
-EdgeSlide is made by stillfalling · Amazing SAS · France
+EdgeSlide is made by PuttingPixelsTogether · Amazing SAS · France
