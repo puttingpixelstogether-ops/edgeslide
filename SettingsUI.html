@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdgeSlide Settings</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:     #0A0A0B;
+    --bg2:    #111113;
+    --bg3:    #18181B;
+    --text:   #F0EEE8;
+    --muted:  #9A9894;
+    --dimmed: #5A5956;
+    --amber:  #FFB347;
+    --purple: #AC65F3;
+    --border: rgba(255,255,255,0.09);
+    --radius: 10px;
+    /* System-font fallbacks (no network fonts, to keep the app offline/private) */
+    --font-display: "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+
+  html, body { width: 100%; min-height: 100%; background: var(--bg); }
+  html { scrollbar-color: var(--bg3) var(--bg); }
+
+  body {
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-y: auto;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Dark scrollbar matching the theme */
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 8px; border: 3px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: #2C2C30; }
+
+  .logo-accent { color: var(--amber); }
+
+  .panel { width: 100%; min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; }
+
+  /* ── HEADER ── */
+  .panel-header { padding: 36px 52px 26px; border-bottom: 1px solid var(--border); }
+  .panel-title-row { display: flex; align-items: center; gap: 14px; }
+  .panel-logo {
+    width: 46px; height: 46px; flex-shrink: 0;
+    border-radius: 11px; background: var(--bg3); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .panel-logo svg { width: 30px; height: 30px; display: block; }
+  .panel-title {
+    font-family: var(--font-display);
+    font-size: 21px; font-weight: 600; letter-spacing: -0.02em; color: var(--text);
+  }
+  .panel-sub { font-size: 13px; color: var(--dimmed); letter-spacing: 0.01em; }
+
+  /* ── COLUMNS ── */
+  .columns { display: flex; gap: 22px; padding: 26px 52px; flex: 1; align-items: stretch; }
+  .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+  /* Last card in each column grows so all columns end at the same height (empty bg extends). */
+  .col > .group:last-child { flex: 1; }
+
+  /* ── GROUP CARD ── */
+  .group {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+    padding: 22px 22px 24px; display: flex; flex-direction: column;
+  }
+  .group-title {
+    font-family: var(--font-display);
+    font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--dimmed);
+    margin-bottom: 22px; /* generous space between section header and first item */
+  }
+
+  /* Items inside a group — NO divider lines between them */
+  .item-row, .item-stack { margin-bottom: 20px; }
+  .group > :last-child { margin-bottom: 0; }
+
+  .item-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .item-stack { display: flex; flex-direction: column; gap: 12px; }
+
+  .item-label { display: flex; flex-direction: column; min-width: 0; }
+  .label-main { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--text); }
+  .label-hint { font-size: 12px; color: var(--dimmed); margin-top: 2px; }
+
+  /* ── RANGE SLIDER ── */
+  .slider-wrap { display: flex; align-items: center; gap: 12px; }
+  .slider-val {
+    font-family: var(--font-display); font-size: 13px; font-weight: 600;
+    color: var(--amber); min-width: 44px; text-align: right;
+  }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    flex: 1 1 auto; min-width: 0; height: 3px; border-radius: 2px;
+    background: var(--bg3); outline: none; cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--amber); cursor: pointer;
+    box-shadow: 0 0 0 3px rgba(255,179,71,0.15); transition: box-shadow 0.2s;
+  }
+  input[type="range"]:hover::-webkit-slider-thumb { box-shadow: 0 0 0 5px rgba(255,179,71,0.2); }
+
+  /* ── SELECT ── */
+  .select-wrap { position: relative; }
+  select {
+    -webkit-appearance: none; appearance: none;
+    background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius);
+    color: var(--text); font-family: var(--font-display); font-size: 14px; font-weight: 600;
+    padding: 9px 34px 9px 13px; cursor: pointer; outline: none; min-width: 128px;
+    transition: border-color 0.2s;
+  }
+  select:hover { border-color: rgba(255,255,255,0.18); }
+  select:focus { border-color: var(--amber); }
+  .select-wrap::after {
+    content: ''; position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+    width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent;
+    border-top: 5px solid var(--dimmed); pointer-events: none;
+  }
+  select option { background: var(--bg2); color: var(--text); }
+
+  /* ── TOGGLE ── */
+  .toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+  .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-track {
+    position: absolute; inset: 0; border-radius: 13px;
+    background: var(--bg3); border: 1px solid var(--border); cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .toggle-thumb {
+    position: absolute; top: 4px; left: 4px; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--dimmed); transition: transform 0.2s, background 0.2s; pointer-events: none;
+  }
+  .toggle input:checked + .toggle-track { background: rgba(255,179,71,0.2); border-color: rgba(255,179,71,0.4); }
+  .toggle input:checked + .toggle-track .toggle-thumb { transform: translateX(18px); background: var(--amber); }
+  .toggle input:focus-visible + .toggle-track { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+  /* ── FOOTER ── */
+  .panel-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 52px 24px; border-top: 1px solid var(--border);
+  }
+  .footer-meta { display: flex; align-items: center; gap: 16px; font-size: 11px; color: var(--dimmed); }
+  .footer-meta a { color: var(--dimmed); text-decoration: none; transition: color 0.2s; }
+  .footer-meta a:hover { color: var(--amber); }
+  .footer-actions { display: flex; gap: 10px; }
+  .btn {
+    font-family: var(--font-display); font-size: 14px; font-weight: 600;
+    border-radius: 8px; padding: 10px 22px; cursor: pointer; border: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); opacity: 1; }
+  .btn-save { background: var(--amber); color: #0A0A0B; }
+
+  /* ── SUPPORT / COFFEE ── */
+  .support-text { font-size: 12.5px; color: var(--muted); margin-bottom: 16px; line-height: 1.55; }
+  .btn-coffee {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; text-decoration: none;
+    font-family: var(--font-display); font-size: 14px; font-weight: 600;
+    padding: 11px 16px; border-radius: 8px;
+    background: transparent; color: var(--muted); border: 1px solid var(--border);
+    transition: color 0.2s, border-color 0.2s, transform 0.15s;
+  }
+  .btn-coffee:hover { color: var(--amber); border-color: rgba(255,179,71,0.4); transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<div class="panel">
+
+  <div class="panel-header">
+    <div class="panel-title-row">
+      <span class="panel-logo">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(16,0) scale(-1,1)">
+            <rect x="1.01338" y="3.01338" width="13.9732" height="9.97324" rx="0.843066" fill="url(#logoGrad)" stroke="#6B6C71" stroke-width="0.026764"/>
+            <rect x="12" y="4" width="2" height="8" fill="#FFB347"/>
+            <rect x="2" y="4" width="2" height="8" fill="#AC65F3"/>
+          </g>
+          <defs>
+            <linearGradient id="logoGrad" x1="8" y1="3" x2="8" y2="13" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#27272C"/><stop offset="1" stop-color="#141416"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </span>
+      <div>
+        <div class="panel-title">Edge<span class="logo-accent">Slide</span></div>
+        <span class="panel-sub">Touchpad edge sliders for brightness &amp; volume</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="columns">
+
+    <!-- LEFT COLUMN: Controls -->
+    <div class="col">
+      <div class="group">
+        <div class="group-title">Controls</div>
+
+        <div class="item-row">
+          <div class="item-label"><span class="label-main">Left edge</span></div>
+          <div class="select-wrap">
+            <select id="leftAction">
+              <option value="Brightness" selected>Brightness</option>
+              <option value="Volume">Volume</option>
+              <option value="Disabled">Disabled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-label"><span class="label-main">Right edge</span></div>
+          <div class="select-wrap">
+            <select id="rightAction">
+              <option value="Brightness">Brightness</option>
+              <option value="Volume" selected>Volume</option>
+              <option value="Disabled">Disabled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-label">
+            <span class="label-main">Invert direction</span>
+            <span class="label-hint">Slide down to increase</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="invertDir">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDDLE COLUMN: Behaviour -->
+    <div class="col">
+      <div class="group">
+        <div class="group-title">Behaviour</div>
+
+        <div class="item-stack">
+          <div class="item-label">
+            <span class="label-main">Strip width</span>
+            <span class="label-hint">Active zone from edge</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" id="stripWidth" min="3" max="15" value="5" step="1">
+            <span class="slider-val" id="stripWidthVal">5 mm</span>
+          </div>
+        </div>
+
+        <div class="item-stack">
+          <div class="item-label">
+            <span class="label-main">Confirmation hold</span>
+            <span class="label-hint">How long before gesture activates</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" id="holdMs" min="50" max="300" value="80" step="10">
+            <span class="slider-val" id="holdMsVal">80 ms</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: System + Support -->
+    <div class="col">
+      <div class="group">
+        <div class="group-title">System</div>
+
+        <div class="item-row">
+          <div class="item-label">
+            <span class="label-main">Launch at startup</span>
+            <span class="label-hint">Start with Windows</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="launchStartup">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Support</div>
+        <p class="support-text">EdgeSlide is free &amp; open source, but I won't say no to a coffee.</p>
+        <a class="btn btn-coffee" href="https://ko-fi.com/stillfalling/tip" target="_blank" rel="noopener">&#9749;&nbsp; Buy me a coffee</a>
+      </div>
+    </div>
+
+  </div><!-- /columns -->
+
+  <div class="panel-footer">
+    <div class="footer-meta">
+      <span id="appVersion"></span>
+      <a href="https://github.com/puttingpixelstogether-ops/edgeslide" target="_blank" rel="noopener">GitHub &rarr;</a>
+    </div>
+    <div class="footer-actions">
+      <button class="btn btn-ghost" onclick="cancelSettings()">Cancel</button>
+      <button class="btn btn-save" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+
+</div><!-- /panel -->
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  function post(msg) {
+    if (window.chrome && window.chrome.webview)
+      window.chrome.webview.postMessage(JSON.stringify(msg));
+  }
+
+  const stripWidth = $('stripWidth'), stripWidthVal = $('stripWidthVal');
+  const holdMs = $('holdMs'), holdMsVal = $('holdMsVal');
+
+  function refreshSlider(input, display, suffix) {
+    const min = +input.min, max = +input.max, val = +input.value;
+    const pct = ((val - min) / (max - min)) * 100;
+    input.style.background = `linear-gradient(to right, var(--amber) ${pct}%, var(--bg3) ${pct}%)`;
+    display.textContent = val + ' ' + suffix;
+  }
+
+  stripWidth.addEventListener('input', () => refreshSlider(stripWidth, stripWidthVal, 'mm'));
+  holdMs.addEventListener('input', () => refreshSlider(holdMs, holdMsVal, 'ms'));
+
+  function collect(action) {
+    return {
+      action: action,
+      stripWidthMm: +stripWidth.value,
+      leftAction: $('leftAction').value,
+      rightAction: $('rightAction').value,
+      invert: $('invertDir').checked,
+      debounceMs: +holdMs.value,
+      launchAtStartup: $('launchStartup').checked
+    };
+  }
+
+  function saveSettings()   { post(collect('save')); }
+  function cancelSettings() { post(collect('cancel')); }
+
+  function applyIncoming(s) {
+    if (s.version) $('appVersion').textContent = s.version;
+    $('leftAction').value  = s.leftAction;
+    $('rightAction').value = s.rightAction;
+    $('invertDir').checked      = !!s.invert;
+    $('launchStartup').checked  = !!s.launchAtStartup;
+    stripWidth.value = s.stripWidthMm;
+    holdMs.value     = s.debounceMs;
+    refreshSlider(stripWidth, stripWidthVal, 'mm');
+    refreshSlider(holdMs, holdMsVal, 'ms');
+  }
+
+  if (window.chrome && window.chrome.webview) {
+    window.chrome.webview.addEventListener('message', e => {
+      try { applyIncoming(typeof e.data === 'string' ? JSON.parse(e.data) : e.data); } catch (_) {}
+    });
+  }
+
+  refreshSlider(stripWidth, stripWidthVal, 'mm');
+  refreshSlider(holdMs, holdMsVal, 'ms');
+</script>
+
+</body>
+</html>

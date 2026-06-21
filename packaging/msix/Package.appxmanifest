@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <!--
+    NOTE on Identity:
+    * For sideloading / local testing, "Publisher" must EXACTLY match the subject of the
+      certificate you sign with (e.g. CN=EdgeSlideDev).
+    * For the Microsoft Store, reserve the app name in Partner Center, then replace
+      Name and Publisher with the values the Store assigns you (Product identity page).
+  -->
+  <Identity
+    Name="EdgeSlide"
+    Publisher="CN=EdgeSlideDev"
+    Version="0.1.0.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>EdgeSlide</DisplayName>
+    <PublisherDisplayName>EdgeSlide</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>Turn the left and right edges of your Precision Touchpad into brightness and volume sliders.</Description>
+  </Properties>
+
+  <Dependencies>
+    <!-- Windows 10 2004 (19041) and up. Bump MaxVersionTested as you validate on newer builds. -->
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="EdgeSlide" Executable="EdgeSlide.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="EdgeSlide"
+        Description="Touchpad edge sliders for brightness and volume"
+        BackgroundColor="#F4F6F9"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile
+          Wide310x150Logo="Assets\Wide310x150Logo.png"
+          Square71x71Logo="Assets\Square71x71Logo.png"
+          Square310x310Logo="Assets\Square310x310Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!-- Win32 desktop app needs full trust to use Raw Input, WMI and CoreAudio. -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

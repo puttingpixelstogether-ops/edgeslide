@@ -1,0 +1,38 @@
+# ---- Build output ----
+[Bb]in/
+[Oo]bj/
+publish/
+dist/
+staging/
+[Dd]ebug/
+[Rr]elease/
+
+# ---- Packaging output (generated, not source) ----
+*.msix
+*.appx
+*.appxbundle
+EdgeSlide-Setup.exe
+
+# ---- Signing material / secrets (never commit) ----
+*.pfx
+*.snk
+*.cer
+*.p12
+
+# ---- IDE / editor ----
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userprefs
+*~
+
+# ---- OS cruft ----
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# ---- Logs / local runtime ----
+*.log

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- Targets the .NET 10 SDK you already have installed. -->
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <!-- No RuntimeIdentifier / SelfContained here: build framework-dependent so
+         the build uses your installed runtime instead of downloading runtime packs. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>EdgeSlide</AssemblyName>
+    <RootNamespace>EdgeSlide</RootNamespace>
+    <!-- App icon for the .exe, shortcuts and installers. -->
+    <ApplicationIcon>packaging\EdgeSlide.ico</ApplicationIcon>
+    <!-- Single source of truth for the app version (SemVer). The settings UI reads this. -->
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- HTML settings UI, embedded so it ships inside the exe. -->
+    <EmbeddedResource Include="SettingsUI.html" />
+    <!-- Multi-size app icon, embedded for a crisp DPI-aware tray icon. -->
+    <EmbeddedResource Include="assets\icons\EdgeSlide.ico">
+      <LogicalName>EdgeSlide.ico</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

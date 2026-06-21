@@ -1,0 +1,18 @@
+# Normalize line endings; let Git handle text automatically.
+* text=auto
+
+# Windows-oriented text files keep CRLF on checkout.
+*.cs        text eol=crlf
+*.csproj    text eol=crlf
+*.manifest  text eol=crlf
+*.bat       text eol=crlf
+*.html      text eol=crlf
+*.md        text eol=crlf
+*.json      text eol=crlf
+*.nsi       text eol=crlf
+*.svg       text eol=lf
+
+# Binary assets — never normalize.
+*.ico  binary
+*.png  binary
+*.jpg  binary
