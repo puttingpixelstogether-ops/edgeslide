@@ -1,0 +1,80 @@
+name: Bug report
+description: Something in EdgeSlide isn't working as expected
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. The more detail you give, the faster it can be fixed.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+      placeholder: When I slide the right edge, the volume jumps to 100% instead of following my finger.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How can someone else trigger it?
+      placeholder: |
+        1. Open EdgeSlide
+        2. Slide slowly up the left edge
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: EdgeSlide version
+      description: Shown in the bottom-left of the Settings window (e.g. v0.1.0).
+      placeholder: v0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      description: Press Win+R, type `winver`, and copy the version/build (e.g. Windows 11 23H2, build 22631).
+      placeholder: Windows 11 23H2 (22631)
+    validations:
+      required: true
+
+  - type: input
+    id: hardware
+    attributes:
+      label: Laptop / touchpad
+      description: Your laptop model (and touchpad maker if you know it).
+      placeholder: Surface Laptop Studio 2
+    validations:
+      required: false
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Log (optional)
+      description: |
+        Paste relevant lines from `%APPDATA%\EdgeSlide\edgeslide.log`. For coordinate-level
+        detail, create an empty file named `diagnostics.on` in `%APPDATA%\EdgeSlide`, reproduce
+        the issue, then paste the new `CONTACT` lines. The log contains hardware IDs and touchpad
+        coordinates only — no personal content or keystrokes.
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: My laptop has a Windows Precision Touchpad (Settings → Bluetooth & devices → Touchpad shows gesture options).
+          required: true
+        - label: I searched existing issues and didn't find a duplicate.
+          required: true
