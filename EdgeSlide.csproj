@@ -18,6 +18,11 @@
     <ApplicationIcon>packaging\EdgeSlide.ico</ApplicationIcon>
     <!-- Single source of truth for the app version (SemVer). The settings UI reads this. -->
     <Version>0.1.0</Version>
+    <!-- WebView2 ships an (unused) WPF control that references an old WindowsBase,
+         producing a harmless MSB3277 build warning. We only use the WinForms control,
+         so silence the noise. (Alternative: <UseWPF>true</UseWPF> resolves it but adds
+         the WPF framework to the build.) -->
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

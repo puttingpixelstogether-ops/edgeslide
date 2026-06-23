@@ -36,3 +36,6 @@ Desktop.ini
 
 # ---- Logs / local runtime ----
 *.log
+
+# ---- Local backups of the plain build scripts (kept locally, not shared) ----
+*.bak
