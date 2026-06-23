@@ -1,21 +1,15 @@
 # Terms of Service
 
-**EdgeSlide — Amazing SAS**
-Last updated: [FILL IN effective date]
-
-EdgeSlide is a free Windows utility that turns touchpad edges into brightness and volume controls. Using it means you agree to these terms. They're short.
-
----
+**EdgeSlide · Amazing SAS**
+Last updated: June 2026
 
 ## What EdgeSlide is
 
 A system-tray app for Windows. It reads your Precision Touchpad, adjusts brightness and volume, and gets out of your way. No account, no backend, no cloud. Everything runs on your machine.
 
----
+## License—open source, MIT
 
-## License — open source, MIT
-
-EdgeSlide is open-source software, released under the **MIT License**:
+EdgeSlide is open-source software released under the MIT License:
 
 > MIT License
 >
@@ -29,8 +23,6 @@ EdgeSlide is open-source software, released under the **MIT License**:
 
 In plain language: use it, modify it, share it, build on it. Free, forever. Just keep the copyright notice in copies.
 
----
-
 ## Pay-what-you-want
 
 The app is free. Full stop. If you want to support development, there's an optional donation. A few things to know:
@@ -38,73 +30,45 @@ The app is free. Full stop. If you want to support development, there's an optio
 - It's voluntary. Paying nothing gets you exactly the same software as paying something.
 - It grants no extra features, priority support, or entitlements of any kind.
 - Payments are non-refundable. They're a thank-you, not a purchase. There's nothing to return.
-- Donations are processed by **Ko-fi** (ko-fi.com/puttingpixelstogether/tip), whose own terms and privacy policy govern the transaction. We don't handle payment details directly.
-
----
+- Donations are processed via [Ko-fi](https://ko-fi.com/PuttingPixelsTogether), using Stripe or PayPal depending on your choice. Their respective terms and privacy policies govern the transaction. We don't handle payment details directly.
 
 ## No warranty
 
 EdgeSlide is provided as-is, consistent with the MIT License above. We built it to work and intend to keep it working. But we make no guarantee that it will always be available, always be bug-free, or always behave exactly as expected on every combination of hardware, drivers, and Windows version in existence.
 
-Specifically: the app reads touchpad input, modifies system brightness, and modifies system volume. Behavior depends on your hardware and drivers. Compatibility is limited to Windows Precision Touchpads on Windows 10 and 11. If it doesn't work on your setup, we're sorry. The GitHub issue tracker is the right place.
-
----
+Specifically: the app reads touchpad input, modifies system brightness, and modifies system volume. Behavior depends on your hardware and drivers. Compatibility is limited to Windows Precision Touchpads on Windows 10 and 11. If it doesn't work on your setup, the [GitHub issue tracker](https://github.com/puttingpixelstogether-ops/edgeslide/issues) is the right place.
 
 ## Limitation of liability
 
-To the maximum extent permitted by applicable law, Amazing SAS and the author (stillfalling) are not liable for any indirect, incidental, special, or consequential damages arising from your use of EdgeSlide — including but not limited to disruption to your workflow, unexpected changes to system brightness or volume, or hardware behavior you didn't anticipate.
-
-You set the sliders. You run the app. Consequences of using it are yours.
+To the maximum extent permitted by applicable law, Amazing SAS (32 rue Greffulhe, 92300 Levallois-Perret, France, SIRET 88486627800010) and the author (PuttingPixelsTogether) are not liable for any indirect, incidental, special, or consequential damages arising from your use of EdgeSlide.
 
 **Note for EU/French users:** Under French and EU consumer law, liability for gross negligence, willful misconduct, and certain statutory consumer rights cannot be excluded. The limitation above applies only to the maximum extent the law allows. Nothing here removes your statutory rights.
 
----
-
 ## Hardware compatibility
 
-EdgeSlide requires a **Windows Precision Touchpad**. It will not work on older HID-compliant touchpads or external mice. To check if your laptop qualifies: **Settings → Bluetooth & devices → Touchpad** — if you see gesture controls, you're good.
+EdgeSlide requires a **Windows Precision Touchpad**. It will not work on older HID-compliant touchpads or external mice. To check: **Settings → Bluetooth & devices → Touchpad**—if you see gesture controls, you're good.
 
-The app modifies display brightness via Windows WMI and audio volume via the Windows Core Audio API. Results depend on your display hardware and audio drivers. We can't guarantee compatibility with every monitor, docking station, or audio setup.
-
----
+The app modifies display brightness via Windows WMI and audio volume via the Windows Core Audio API. Results depend on your display hardware and audio drivers.
 
 ## Open-source attributions
 
-EdgeSlide includes or depends on the following third-party components:
-
-**NAudio** — Copyright (c) Mark Heath. MIT License.
-Used for volume control via the Windows Core Audio API.
-[github.com/naudio/NAudio](https://github.com/naudio/NAudio)
-
-**.NET Runtime** — Copyright (c) Microsoft Corporation. MIT License.
-Bundled in the standalone build.
-[dotnet.microsoft.com](https://dotnet.microsoft.com)
-
-**System.Management** — Copyright (c) Microsoft Corporation.
-Used for display brightness via WMI.
-
-**Microsoft Edge WebView2** — Copyright (c) Microsoft Corporation.
-Used to render the local settings screen. Governed by Microsoft's terms and privacy policy.
-[microsoft.com/en-us/edge/webview2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
+- **NAudio**—Copyright (c) Mark Heath. MIT License. [github.com/naudio/NAudio](https://github.com/naudio/NAudio)
+- **.NET Runtime**—Copyright (c) Microsoft Corporation. MIT License. [dotnet.microsoft.com](https://dotnet.microsoft.com)
+- **System.Management**—Copyright (c) Microsoft Corporation. Used for display brightness via WMI.
+- **Microsoft Edge WebView2**—Copyright (c) Microsoft Corporation. Used to render the local settings screen. [microsoft.com/webview2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 
 Full license texts for MIT-licensed components are included in the application package.
 
----
-
 ## Changes
 
-We may update these terms. When we do, the date at the top changes. Continuing to use EdgeSlide after a change means you accept the new terms. These terms describe the current version; if a future version adds paid features or network functionality, the relevant sections will be updated.
-
----
+We may update these terms. When we do, the date at the top changes. Continuing to use EdgeSlide after a change means you accept the new terms.
 
 ## Governing law
 
 These terms are governed by French law. Any disputes go to the competent courts of France.
 
----
-
 ## Contact
 
-Something feels wrong about these terms, or you found a bug: hello@edgeslide.app
+hello@edgeslide.app
 
-EdgeSlide is made by stillfalling · Amazing SAS · France
+**Amazing SAS** · 32 rue Greffulhe · 92300 Levallois-Perret, France · SIRET: 88486627800010
