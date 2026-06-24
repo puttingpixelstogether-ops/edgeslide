@@ -37,12 +37,10 @@ public sealed class SettingsForm : Form
         AutoScaleMode = AutoScaleMode.Dpi;
         BackColor = Color.FromArgb(10, 10, 11); // matches the dark settings UI (#0A0A0B)
 
-        // Size to comfortably fit all content without a scrollbar on large displays,
-        // but never taller than the screen.
-        Rectangle wa = Screen.PrimaryScreen?.WorkingArea ?? new Rectangle(0, 0, 1280, 900);
-        int height = Math.Min(640, wa.Height - 60);
-        ClientSize = new Size(940, height);
-        MinimumSize = new Size(700, 460);
+        // Initial size; the real, DPI-correct size is applied in OnHandleCreated once
+        // the monitor's DPI is known. Minimum is small because the UI is responsive.
+        ClientSize = new Size(1040, 660);
+        MinimumSize = new Size(520, 440);
 
         // Use the app icon for the window title bar / taskbar (not the default).
         try
@@ -205,6 +203,20 @@ public sealed class SettingsForm : Form
             DwmSetWindowAttribute(Handle, DWMWA_TEXT_COLOR, ref captionText, sizeof(int));
         }
         catch { /* older Windows without these attributes — ignore */ }
+
+        // DPI-correct sizing. WinForms window sizes are in physical pixels; WebView2
+        // renders CSS px = physical / (DPI/96). To give the page a comfortable ~1040x660
+        // CSS layout, scale the physical window by the DPI factor (clamped to the screen).
+        try
+        {
+            double scale = DeviceDpi / 96.0;
+            Rectangle wa = Screen.FromHandle(Handle).WorkingArea;
+            int w = Math.Min((int)Math.Round(1040 * scale), wa.Width  - 40);
+            int h = Math.Min((int)Math.Round(660  * scale), wa.Height - 40);
+            ClientSize = new Size(w, h);
+            Location = new Point(wa.X + (wa.Width - Width) / 2, wa.Y + (wa.Height - Height) / 2);
+        }
+        catch { /* keep the constructor size */ }
     }
 
     private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;

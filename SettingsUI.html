@@ -63,9 +63,11 @@
   .panel-sub { font-size: 13px; color: var(--dimmed); letter-spacing: 0.01em; }
 
   /* ── COLUMNS ── */
-  .columns { display: flex; gap: 22px; padding: 26px 52px; flex: 1; align-items: stretch; }
-  .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
-  /* Last card in each column grows so all columns end at the same height (empty bg extends). */
+  /* Columns wrap when the window is narrow (responsive), and each column grows to
+     fill the available width — so it never crams 3 narrow columns into a small page. */
+  .columns { display: flex; flex-wrap: wrap; gap: 22px; padding: 26px 52px; flex: 1; align-content: flex-start; }
+  .col { flex: 1 1 280px; min-width: 260px; display: flex; flex-direction: column; gap: 22px; }
+  /* Last card in each column grows so columns on the same row end level. */
   .col > .group:last-child { flex: 1; }
 
   /* ── GROUP CARD ── */
@@ -77,6 +79,7 @@
     font-family: var(--font-display);
     font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--dimmed);
+    white-space: nowrap;
     margin-bottom: 22px; /* generous space between section header and first item */
   }
 
@@ -87,8 +90,8 @@
   .item-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .item-stack { display: flex; flex-direction: column; gap: 12px; }
 
-  .item-label { display: flex; flex-direction: column; min-width: 0; }
-  .label-main { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--text); }
+  .item-label { display: flex; flex-direction: column; flex: 0 0 auto; }
+  .label-main { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; }
   .label-hint { font-size: 12px; color: var(--dimmed); margin-top: 2px; }
 
   /* ── RANGE SLIDER ── */
@@ -110,12 +113,12 @@
   input[type="range"]:hover::-webkit-slider-thumb { box-shadow: 0 0 0 5px rgba(255,179,71,0.2); }
 
   /* ── SELECT ── */
-  .select-wrap { position: relative; }
+  .select-wrap { position: relative; flex: 0 0 auto; }
   select {
     -webkit-appearance: none; appearance: none;
     background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius);
     color: var(--text); font-family: var(--font-display); font-size: 14px; font-weight: 600;
-    padding: 9px 34px 9px 13px; cursor: pointer; outline: none; min-width: 128px;
+    padding: 9px 34px 9px 13px; cursor: pointer; outline: none; min-width: 120px;
     transition: border-color 0.2s;
   }
   select:hover { border-color: rgba(255,255,255,0.18); }
