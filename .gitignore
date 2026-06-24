@@ -39,3 +39,6 @@ Desktop.ini
 
 # ---- Local backups of the plain build scripts (kept locally, not shared) ----
 *.bak
+
+# ---- Other ----
+CODE_REVIEW.md
