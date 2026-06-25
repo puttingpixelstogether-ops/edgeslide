@@ -40,5 +40,8 @@ Desktop.ini
 # ---- Local backups of the plain build scripts (kept locally, not shared) ----
 *.bak
 
-# ---- Other ----
+# ---- Local-only working files (not part of the public repo) ----
 CODE_REVIEW.md
+docs/improvement-recommendations.md
+# winget manifests live in microsoft/winget-pkgs, not here — this is just a staging copy
+winget-submission/
