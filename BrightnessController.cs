@@ -55,6 +55,33 @@ public sealed class BrightnessController : IDisposable
         }
     }
 
+    /// <summary>
+    /// Read the current brightness as a 0.0–1.0 value, or -1 if it can't be read.
+    /// Used to anchor a relative slide so it starts from the present level.
+    /// </summary>
+    public double GetScalar()
+    {
+        if (!_available) return -1.0;
+        try
+        {
+            using var searcher = new ManagementObjectSearcher(
+                "root\\WMI", "SELECT * FROM WmiMonitorBrightness");
+            foreach (ManagementBaseObject o in searcher.Get())
+            {
+                object? cur = o["CurrentBrightness"];
+                o.Dispose();
+                if (cur != null)
+                    return Math.Clamp(Convert.ToInt32(cur) / 100.0, 0.0, 1.0);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Warn($"Could not read current brightness: {ex.Message}");
+        }
+        // Fall back to the last value we applied, if we have one.
+        return _lastApplied == 255 ? -1.0 : _lastApplied / 100.0;
+    }
+
     /// <summary>Set brightness from a 0.0–1.0 value.</summary>
     public void SetScalar(double value)
     {

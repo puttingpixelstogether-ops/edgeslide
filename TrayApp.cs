@@ -33,6 +33,10 @@ public sealed class TrayApp : ApplicationContext
     private double _pendingBrightness, _pendingVolume;
     private bool _applierRunning;
 
+    // Relative-mode anchor for the current slide (single finger, so one at a time):
+    // the value the control had when the slide started, and the finger position then.
+    private double _relStartValue, _relAnchorFrac;
+
     public TrayApp()
     {
         _settings = Settings.Load();
@@ -99,20 +103,30 @@ public sealed class TrayApp : ApplicationContext
     // ---------------------------------------------------------------------
     private void OnGestureUpdated(GestureUpdate u)
     {
-        // HUD (marshals to UI thread itself).
-        _overlay.ShowValue(u.Side, u.Action, u.Value);
+        double value = ComputeAppliedValue(u);
+
+        // HUD (marshals to UI thread itself). Skipped per-control if the user turned that
+        // overlay off, e.g. because their system already shows its own volume indicator.
+        bool showOverlay = u.Action switch
+        {
+            StripAction.Brightness => _settings.ShowOverlayBrightness,
+            StripAction.Volume => _settings.ShowOverlayVolume,
+            _ => true
+        };
+        if (showOverlay)
+            _overlay.ShowValue(u.Side, u.Action, value);
 
         // Apply value off the UI thread.
         lock (_applyGate)
         {
             if (u.Action == StripAction.Brightness)
             {
-                _pendingBrightness = u.Value;
+                _pendingBrightness = value;
                 _hasPendingBrightness = true;
             }
             else if (u.Action == StripAction.Volume)
             {
-                _pendingVolume = u.Value;
+                _pendingVolume = value;
                 _hasPendingVolume = true;
             }
 
@@ -122,6 +136,32 @@ public sealed class TrayApp : ApplicationContext
                 Task.Run(ApplyLoop);
             }
         }
+    }
+
+    /// <summary>
+    /// Map a gesture update to the value to apply, honouring the strip's slider mode.
+    /// Absolute: the finger position is the value. Relative: start from the control's
+    /// current level when the slide began and add how far the finger has moved since,
+    /// so the value never jumps to where you first touch.
+    /// </summary>
+    private double ComputeAppliedValue(GestureUpdate u)
+    {
+        SliderMode mode = u.Side == StripSide.Left ? _settings.LeftStripMode : _settings.RightStripMode;
+        if (mode != SliderMode.Relative)
+            return u.Value;
+
+        if (u.SessionStart)
+        {
+            double current = u.Action == StripAction.Brightness
+                ? _brightness.GetScalar()
+                : _volume.GetScalar();
+            if (current < 0) current = u.Value; // couldn't read — fall back to absolute anchor
+            _relStartValue = current;
+            _relAnchorFrac = u.Value;
+            return current; // no change at the moment of touch-down
+        }
+
+        return Math.Clamp(_relStartValue + (u.Value - _relAnchorFrac), 0.0, 1.0);
     }
 
     private void ApplyLoop()

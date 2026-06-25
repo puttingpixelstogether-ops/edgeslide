@@ -39,7 +39,7 @@ public sealed class SettingsForm : Form
 
         // Initial size; the real, DPI-correct size is applied in OnHandleCreated once
         // the monitor's DPI is known. Minimum is small because the UI is responsive.
-        ClientSize = new Size(1040, 660);
+        ClientSize = new Size(1040, 840);
         MinimumSize = new Size(520, 440);
 
         // Use the app icon for the window title bar / taskbar (not the default).
@@ -136,7 +136,11 @@ public sealed class SettingsForm : Form
             _working.StripWidthMm = msg.StripWidthMm;
             _working.LeftStripAction = ParseAction(msg.LeftAction, StripAction.Brightness);
             _working.RightStripAction = ParseAction(msg.RightAction, StripAction.Volume);
+            _working.LeftStripMode = ParseMode(msg.LeftMode, SliderMode.Relative);
+            _working.RightStripMode = ParseMode(msg.RightMode, SliderMode.Relative);
             _working.InvertDirection = msg.Invert;
+            _working.ShowOverlayBrightness = msg.ShowOsdBrightness;
+            _working.ShowOverlayVolume = msg.ShowOsdVolume;
             _working.DebounceMs = msg.DebounceMs;
             _working.LaunchAtStartup = msg.LaunchAtStartup;
             _working.Clamp();
@@ -156,7 +160,11 @@ public sealed class SettingsForm : Form
             StripWidthMm = (int)Math.Round(_working.StripWidthMm),
             LeftAction = _working.LeftStripAction.ToString(),
             RightAction = _working.RightStripAction.ToString(),
+            LeftMode = _working.LeftStripMode.ToString(),
+            RightMode = _working.RightStripMode.ToString(),
             Invert = _working.InvertDirection,
+            ShowOsdBrightness = _working.ShowOverlayBrightness,
+            ShowOsdVolume = _working.ShowOverlayVolume,
             DebounceMs = _working.DebounceMs,
             LaunchAtStartup = _working.LaunchAtStartup || StartupManager.IsEnabled()
         };
@@ -177,6 +185,9 @@ public sealed class SettingsForm : Form
 
     private static StripAction ParseAction(string? s, StripAction fallback)
         => Enum.TryParse(s, ignoreCase: true, out StripAction a) ? a : fallback;
+
+    private static SliderMode ParseMode(string? s, SliderMode fallback)
+        => Enum.TryParse(s, ignoreCase: true, out SliderMode m) ? m : fallback;
 
     /// <summary>App version (from the assembly, i.e. the .csproj &lt;Version&gt;), formatted "vMAJOR.MINOR.PATCH".</summary>
     private static string AppVersion()
@@ -205,14 +216,14 @@ public sealed class SettingsForm : Form
         catch { /* older Windows without these attributes — ignore */ }
 
         // DPI-correct sizing. WinForms window sizes are in physical pixels; WebView2
-        // renders CSS px = physical / (DPI/96). To give the page a comfortable ~1040x660
+        // renders CSS px = physical / (DPI/96). To give the page a comfortable ~1040x840
         // CSS layout, scale the physical window by the DPI factor (clamped to the screen).
         try
         {
             double scale = DeviceDpi / 96.0;
             Rectangle wa = Screen.FromHandle(Handle).WorkingArea;
             int w = Math.Min((int)Math.Round(1040 * scale), wa.Width  - 40);
-            int h = Math.Min((int)Math.Round(660  * scale), wa.Height - 40);
+            int h = Math.Min((int)Math.Round(840  * scale), wa.Height - 40);
             ClientSize = new Size(w, h);
             Location = new Point(wa.X + (wa.Width - Width) / 2, wa.Y + (wa.Height - Height) / 2);
         }
@@ -240,7 +251,11 @@ public sealed class SettingsForm : Form
         [JsonPropertyName("stripWidthMm")] public int StripWidthMm { get; set; }
         [JsonPropertyName("leftAction")] public string LeftAction { get; set; } = "";
         [JsonPropertyName("rightAction")] public string RightAction { get; set; } = "";
+        [JsonPropertyName("leftMode")] public string LeftMode { get; set; } = "";
+        [JsonPropertyName("rightMode")] public string RightMode { get; set; } = "";
         [JsonPropertyName("invert")] public bool Invert { get; set; }
+        [JsonPropertyName("showOsdBrightness")] public bool ShowOsdBrightness { get; set; } = true;
+        [JsonPropertyName("showOsdVolume")] public bool ShowOsdVolume { get; set; } = true;
         [JsonPropertyName("debounceMs")] public int DebounceMs { get; set; }
         [JsonPropertyName("launchAtStartup")] public bool LaunchAtStartup { get; set; }
     }

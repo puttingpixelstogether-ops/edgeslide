@@ -12,12 +12,14 @@ public readonly struct GestureUpdate
     public readonly StripSide Side;
     public readonly StripAction Action;
     public readonly double Value; // 0.0 .. 1.0
+    public readonly bool SessionStart; // true on the first update of a new slide
 
-    public GestureUpdate(StripSide side, StripAction action, double value)
+    public GestureUpdate(StripSide side, StripAction action, double value, bool sessionStart)
     {
         Side = side;
         Action = action;
         Value = value;
+        SessionStart = sessionStart;
     }
 }
 
@@ -227,7 +229,11 @@ public sealed class StripGestureDetector
         if (settings.InvertDirection)
             frac = 1.0 - frac; // inverted: top = 0%, bottom = 100%
 
-        GestureUpdated?.Invoke(new GestureUpdate(s.Side, s.Action, frac));
+        // Flag the first update of the slide so consumers can anchor a relative mapping.
+        bool first = !s.EmittedFirst;
+        s.EmittedFirst = true;
+
+        GestureUpdated?.Invoke(new GestureUpdate(s.Side, s.Action, frac, first));
     }
 
     private static double ElapsedMs(long fromTicks, long now)
@@ -244,6 +250,7 @@ public sealed class StripGestureDetector
         public long InnerSinceTicks;
         public bool DirectionDecided;
         public bool Activated;
+        public bool EmittedFirst;
         public double StripWidthLogical;
     }
 }

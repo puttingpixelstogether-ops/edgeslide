@@ -4,6 +4,21 @@ All notable changes to EdgeSlide are documented here. This project follows
 [Semantic Versioning](https://semver.org) and the spirit of
 [Keep a Changelog](https://keepachangelog.com).
 
+## [0.2.0] - 2026-06-25
+
+### Added
+- Per-strip slider mode, set independently for each edge in Settings:
+  - **Relative** (new default): the value adjusts up or down from its current level by how
+    far you slide, so where you first touch doesn't matter — starting low no longer snaps
+    the value to 0.
+  - **Absolute**: the original behaviour, where the value jumps to your finger's position
+    (top = max, bottom = min).
+- Separate "Brightness overlay" and "Volume overlay" switches in Settings → Behaviour, so
+  EdgeSlide's on-screen slider can be turned off per control — useful when Windows already
+  shows its own indicator for one of them (some systems show a native volume OSD).
+- A script to build an ARM64 portable exe (`build-portable-arm64.bat`) for anyone running
+  Windows on ARM who wants to build it themselves.
+
 ## [0.1.1] - 2026-06-24
 
 ### Changed

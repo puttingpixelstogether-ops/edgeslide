@@ -86,16 +86,20 @@ Ok "pad's clear"
 
 $proj = Join-Path $root 'EdgeSlide.csproj'
 
+# Target CPU architecture (set by build-portable-arm64.bat; defaults to x64).
+if (-not $Arch) { $Arch = 'x64' }
+$rid = "win-$Arch"
+
 if ($Mode -eq 'portable') {
   # ---------------- PORTABLE: self-contained single-file ----------------
   Step "Cleaning previous build"
-  $dist = Join-Path $root 'dist'
+  $dist = if ($Arch -eq 'x64') { Join-Path $root 'dist' } else { Join-Path $root "dist-$Arch" }
   if (Test-Path $dist) { Remove-Item -Recurse -Force $dist }
   Ok "dist wiped"
 
-  Step "Bundling self-contained single-file exe (grab a coffee)"
+  Step "Bundling self-contained single-file exe for $rid (grab a coffee)"
   Write-Host $dim
-  & dotnet publish $proj -c Release -r win-x64 --self-contained true `
+  & dotnet publish $proj -c Release -r $rid --self-contained true `
       -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true `
       -o $dist
   $code = $LASTEXITCODE
@@ -105,9 +109,20 @@ if ($Mode -eq 'portable') {
   if ($code -ne 0 -or -not (Test-Path $exe)) { Write-Host ""; Bad "Build failed — scroll up for the real error."; exit 1 }
   Get-ChildItem $dist -Filter *.pdb -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
 
+  # For non-x64, name the file to match the release asset (e.g. EdgeSlide-Portable-arm64.exe).
+  if ($Arch -ne 'x64') {
+    $named = Join-Path $dist "EdgeSlide-Portable-$Arch.exe"
+    Move-Item -Force $exe $named
+    $exe = $named
+  }
+
   $size = "{0:N1} MB" -f ((Get-Item $exe).Length / 1MB)
   $done = "$exe   $dim($size)$reset"
-  $hint = "Double-click to run, or share it. Lives in the tray, no install."
+  $hint = if ($Arch -eq 'x64') {
+    "Double-click to run, or share it. Lives in the tray, no install."
+  } else {
+    "ARM64 build — upload this alongside the x64 exe on the GitHub release."
+  }
 }
 else {
   # ---------------- INSTALL: framework-dependent, into LOCALAPPDATA -------

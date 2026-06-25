@@ -47,6 +47,32 @@ public sealed class VolumeController : IDisposable
         }
     }
 
+    /// <summary>
+    /// Read the current master volume as a 0.0–1.0 value, or -1 if it can't be read.
+    /// Used to anchor a relative slide so it starts from the present level.
+    /// </summary>
+    public double GetScalar()
+    {
+        if (!_available) return -1.0;
+        lock (_gate)
+        {
+            try
+            {
+                if (_device == null)
+                    ResolveDevice();
+                if (_device == null)
+                    return -1.0;
+                return Math.Clamp(_device.AudioEndpointVolume.MasterVolumeLevelScalar, 0.0, 1.0);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn($"Could not read current volume, will re-resolve endpoint: {ex.Message}");
+                _device = null;
+                return -1.0;
+            }
+        }
+    }
+
     /// <summary>Set master volume from a 0.0–1.0 value.</summary>
     public void SetScalar(double value)
     {

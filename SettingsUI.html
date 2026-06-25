@@ -146,6 +146,24 @@
   .toggle input:checked + .toggle-track .toggle-thumb { transform: translateX(18px); background: var(--amber); }
   .toggle input:focus-visible + .toggle-track { outline: 2px solid var(--amber); outline-offset: 2px; }
 
+  /* ── SEGMENTED TOGGLE (Absolute | Relative) ── */
+  /* Full-width, two equal halves; shrinks to fit so it never overflows the card. */
+  .seg {
+    display: flex; width: 100%; min-width: 0;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 3px; gap: 3px;
+  }
+  .seg button {
+    flex: 1 1 0; min-width: 0;
+    background: transparent; border: none; border-radius: 7px;
+    color: var(--muted); font-family: var(--font-display); font-size: 13px; font-weight: 600;
+    padding: 8px 6px; cursor: pointer; transition: background 0.18s, color 0.18s;
+  }
+  .seg button:hover { color: var(--text); }
+  .seg button.active { background: var(--amber); color: #0A0A0B; }
+  /* Hint under the switch — wraps to as many lines as needed. */
+  .seg-hint { font-size: 12px; color: var(--dimmed); line-height: 1.45; white-space: normal; }
+
   /* ── FOOTER ── */
   .panel-footer {
     display: flex; align-items: center; justify-content: space-between;
@@ -224,6 +242,15 @@
           </div>
         </div>
 
+        <div class="item-stack">
+          <span class="label-main">Left mode</span>
+          <div class="seg" id="leftMode" data-value="Relative">
+            <button type="button" data-v="Absolute">Absolute</button>
+            <button type="button" data-v="Relative">Relative</button>
+          </div>
+          <span class="seg-hint">Absolute jumps to your finger. Relative adjusts up or down from the current level.</span>
+        </div>
+
         <div class="item-row">
           <div class="item-label"><span class="label-main">Right edge</span></div>
           <div class="select-wrap">
@@ -233,6 +260,15 @@
               <option value="Disabled">Disabled</option>
             </select>
           </div>
+        </div>
+
+        <div class="item-stack">
+          <span class="label-main">Right mode</span>
+          <div class="seg" id="rightMode" data-value="Relative">
+            <button type="button" data-v="Absolute">Absolute</button>
+            <button type="button" data-v="Relative">Relative</button>
+          </div>
+          <span class="seg-hint">Absolute jumps to your finger. Relative adjusts up or down from the current level.</span>
         </div>
 
         <div class="item-row">
@@ -273,6 +309,28 @@
             <input type="range" id="holdMs" min="50" max="300" value="80" step="10">
             <span class="slider-val" id="holdMsVal">80 ms</span>
           </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-label">
+            <span class="label-main">Brightness overlay</span>
+            <span class="label-hint">Hide custom UI slider</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="showOsdBrightness">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </label>
+        </div>
+
+        <div class="item-row">
+          <div class="item-label">
+            <span class="label-main">Volume overlay</span>
+            <span class="label-hint">Hide custom UI slider</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="showOsdVolume">
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+          </label>
         </div>
       </div>
     </div>
@@ -343,7 +401,11 @@
       stripWidthMm: +stripWidth.value,
       leftAction: $('leftAction').value,
       rightAction: $('rightAction').value,
+      leftMode: $('leftMode').dataset.value,
+      rightMode: $('rightMode').dataset.value,
       invert: $('invertDir').checked,
+      showOsdBrightness: $('showOsdBrightness').checked,
+      showOsdVolume: $('showOsdVolume').checked,
       debounceMs: +holdMs.value,
       launchAtStartup: $('launchStartup').checked
     };
@@ -352,11 +414,29 @@
   function saveSettings()   { post(collect('save')); }
   function cancelSettings() { post(collect('cancel')); }
 
+  // Segmented Absolute|Relative toggles.
+  function setSeg(id, value) {
+    const seg = $(id);
+    if (value !== 'Absolute' && value !== 'Relative') value = 'Absolute';
+    seg.dataset.value = value;
+    seg.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.v === value));
+  }
+  function wireSeg(id) {
+    $(id).querySelectorAll('button').forEach(b =>
+      b.addEventListener('click', () => setSeg(id, b.dataset.v)));
+  }
+  wireSeg('leftMode');  setSeg('leftMode',  'Relative');
+  wireSeg('rightMode'); setSeg('rightMode', 'Relative');
+
   function applyIncoming(s) {
     if (s.version) $('appVersion').textContent = s.version;
     $('leftAction').value  = s.leftAction;
     $('rightAction').value = s.rightAction;
+    if (s.leftMode)  setSeg('leftMode',  s.leftMode);
+    if (s.rightMode) setSeg('rightMode', s.rightMode);
     $('invertDir').checked      = !!s.invert;
+    $('showOsdBrightness').checked = (s.showOsdBrightness !== false); // default on
+    $('showOsdVolume').checked     = (s.showOsdVolume !== false);     // default on
     $('launchStartup').checked  = !!s.launchAtStartup;
     stripWidth.value = s.stripWidthMm;
     holdMs.value     = s.debounceMs;

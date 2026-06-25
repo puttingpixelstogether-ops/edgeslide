@@ -12,6 +12,16 @@ public enum StripAction
     Volume = 2
 }
 
+/// <summary>How a strip maps finger movement to the control's value.</summary>
+public enum SliderMode
+{
+    /// <summary>Value snaps to the finger's position (top = max, bottom = min).</summary>
+    Absolute = 0,
+    /// <summary>Value adjusts from its current level by how far the finger moves,
+    /// so where you first touch doesn't jump the value.</summary>
+    Relative = 1
+}
+
 /// <summary>
 /// User-configurable settings, persisted to %APPDATA%\EdgeSlide\settings.json.
 /// </summary>
@@ -24,6 +34,10 @@ public sealed class Settings
 
     // Behaviour
     public bool InvertDirection { get; set; } = false;     // false: top=100%, bottom=0%
+    public SliderMode LeftStripMode { get; set; } = SliderMode.Relative;   // per-strip mapping
+    public SliderMode RightStripMode { get; set; } = SliderMode.Relative;
+    public bool ShowOverlayBrightness { get; set; } = true; // draw EdgeSlide's HUD for brightness
+    public bool ShowOverlayVolume { get; set; } = true;     // draw EdgeSlide's HUD for volume
     public int DebounceMs { get; set; } = 80;              // 50–300 ms confirmation hold
     public bool LaunchAtStartup { get; set; } = false;
     public bool Enabled { get; set; } = true;              // master on/off (tray toggle)
@@ -101,6 +115,10 @@ public sealed class Settings
             LeftStripAction = LeftStripAction,
             RightStripAction = RightStripAction,
             InvertDirection = InvertDirection,
+            LeftStripMode = LeftStripMode,
+            RightStripMode = RightStripMode,
+            ShowOverlayBrightness = ShowOverlayBrightness,
+            ShowOverlayVolume = ShowOverlayVolume,
             DebounceMs = DebounceMs,
             LaunchAtStartup = LaunchAtStartup,
             Enabled = Enabled,

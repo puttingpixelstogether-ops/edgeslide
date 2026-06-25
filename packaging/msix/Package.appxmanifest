@@ -15,7 +15,7 @@
   <Identity
     Name="EdgeSlide"
     Publisher="CN=EdgeSlideDev"
-    Version="0.1.1.0"
+    Version="0.2.0.0"
     ProcessorArchitecture="x64" />
 
   <Properties>
