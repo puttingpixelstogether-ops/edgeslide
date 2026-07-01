@@ -4,6 +4,18 @@ All notable changes to EdgeSlide are documented here. This project follows
 [Semantic Versioning](https://semver.org) and the spirit of
 [Keep a Changelog](https://keepachangelog.com).
 
+## [0.2.1] - 2026-06-25
+
+### Fixed
+- Volume now follows the current default playback device. Previously, connecting Bluetooth
+  headphones (or otherwise switching output) after EdgeSlide had started left it adjusting
+  the old device; it now re-checks the default output at the start of each volume slide.
+- The Settings window now opens tall enough to show every control (it could clip near the
+  bottom on some displays).
+
+### Internal
+- Volume changes are de-duplicated (only real level changes are sent to the audio device).
+
 ## [0.2.0] - 2026-06-25
 
 ### Added

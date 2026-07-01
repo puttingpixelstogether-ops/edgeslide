@@ -103,6 +103,11 @@ public sealed class TrayApp : ApplicationContext
     // ---------------------------------------------------------------------
     private void OnGestureUpdated(GestureUpdate u)
     {
+        // At the start of a volume slide, re-acquire the current default output so a
+        // switched device (e.g. Bluetooth just connected) is controlled, not the old one.
+        if (u.SessionStart && u.Action == StripAction.Volume)
+            _volume.RefreshDefaultDevice();
+
         double value = ComputeAppliedValue(u);
 
         // HUD (marshals to UI thread itself). Skipped per-control if the user turned that

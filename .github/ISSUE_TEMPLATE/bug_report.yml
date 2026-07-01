@@ -33,8 +33,8 @@ body:
     id: version
     attributes:
       label: EdgeSlide version
-      description: Shown in the bottom-left of the Settings window (e.g. v0.2.0).
-      placeholder: v0.2.0
+      description: Shown in the bottom-left of the Settings window (e.g. v0.2.1).
+      placeholder: v0.2.1
     validations:
       required: true
 
